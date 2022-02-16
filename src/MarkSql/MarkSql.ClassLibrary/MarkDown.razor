@@ -1,0 +1,11 @@
+﻿<h3>MarkDown</h3>
+@inherits EditorBase
+
+<textarea class="form-control" 
+ @bind-value="Body" @bind-value:event="oninput">
+</textarea>
+
+@code {
+    public string Body { get; set; } = string.Empty;
+    public string Preview => Body;//  Markdown.ToHtml(Body);
+}
