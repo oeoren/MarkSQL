@@ -31,7 +31,7 @@ Welcome to your new app.
 
     public record Model
     {
-        [System.ComponentModel.DataAnnotations.MinLength(3)]
+/*      [System.ComponentModel.DataAnnotations.MinLength(3)]
         [System.ComponentModel.DataAnnotations.Display(Name = "String Value with custom name")]
         public string StringValue { get; set; } = "meziantou";
         [System.ComponentModel.DisplayName("Custom name")]
@@ -39,7 +39,7 @@ Welcome to your new app.
         [System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         public DateTime DateValue { get; set; } = DateTime.Now;
         public DateTime DateTimeValue { get; set; } = DateTime.Now;
-/*
+
         [System.ComponentModel.DataAnnotations.DataType(System.ComponentModel.DataAnnotations.DataType.Date)]
         public DateTime? DateValueNullable { get; set; }
 
