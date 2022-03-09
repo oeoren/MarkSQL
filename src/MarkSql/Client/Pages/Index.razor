@@ -2,7 +2,12 @@
 
 <PageTitle>Index</PageTitle>
 
-<MarkDown ></MarkDown>
+<input type="text" @bind="md" @bind:event="oninput" />
+
+<MarkDown @bind-ChildData="md" />
+
+<br/>
+
 
 Welcome to your new app.
 
@@ -22,11 +27,24 @@ Welcome to your new app.
         </FieldTemplate>
     </GenericForm>
 </EditForm>
+<div>
+    <label>
+        <input type="checkbox" @onchange="ExecProc" />
+        
+    </label>
 
+</div>
 <div>
 @MyModel
 </div>
 @code {
+
+
+    private string md = "empty";
+    private void ExecProc()
+    {
+        md = $"Last changed at {DateTime.Now}";
+    }
     public Model MyModel { get; set; } = new Model();
 
     public record Model

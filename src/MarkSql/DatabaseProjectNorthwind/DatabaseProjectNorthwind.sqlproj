@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>DatabaseProjectNorthwind</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{96637F81-B481-4420-A19F-9CE2C2C342E9}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>DatabaseProjectNorthwind</RootNamespace>
+    <AssemblyName>DatabaseProjectNorthwind</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(NetCoreBuild)' == 'true'" Project="$(NETCoreTargetsPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(NetCoreBuild)' != 'true' AND '$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <PackageReference Condition="'$(NetCoreBuild)' == 'true'" Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Views\" />
+    <Folder Include="Tables\" />
+    <Folder Include="StoredProcedures\" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
+  <ItemGroup>
+    <Build Include="Views\Summary of Sales by Year.sql" />
+    <Build Include="Views\Summary of Sales by Quarter.sql" />
+    <Build Include="Views\Sales by Category.sql" />
+    <Build Include="Views\Sales Totals by Amount.sql" />
+    <Build Include="Views\Quarterly Orders.sql" />
+    <Build Include="Views\Products by Category.sql" />
+    <Build Include="Views\Products Above Average Price.sql" />
+    <Build Include="Views\Product Sales for 1997.sql" />
+    <Build Include="Views\Orders Qry.sql" />
+    <Build Include="Views\Order Subtotals.sql" />
+    <Build Include="Views\Order Details Extended.sql" />
+    <Build Include="Views\Invoices.sql" />
+    <Build Include="Views\Customer and Suppliers by City.sql" />
+    <Build Include="Views\Current Product List.sql" />
+    <Build Include="Views\Category Sales for 1997.sql" />
+    <Build Include="Views\Alphabetical list of products.sql" />
+    <Build Include="Tables\Territories.sql" />
+    <Build Include="Tables\Suppliers.sql" />
+    <Build Include="Tables\Shippers.sql" />
+    <Build Include="Tables\Region.sql" />
+    <Build Include="Tables\Products.sql" />
+    <Build Include="Tables\Orders.sql" />
+    <Build Include="Tables\Order Details.sql" />
+    <Build Include="Tables\Employees.sql" />
+    <Build Include="Tables\EmployeeTerritories.sql" />
+    <Build Include="Tables\Customers.sql" />
+    <Build Include="Tables\CustomerDemographics.sql" />
+    <Build Include="Tables\CustomerCustomerDemo.sql" />
+    <Build Include="Tables\Categories.sql" />
+    <Build Include="StoredProcedures\mq_Products.sql" />
+    <Build Include="StoredProcedures\Ten Most Expensive Products.sql" />
+    <Build Include="StoredProcedures\SalesByCategory.sql" />
+    <Build Include="StoredProcedures\Sales by Year.sql" />
+    <Build Include="StoredProcedures\Employee Sales by Country.sql" />
+    <Build Include="StoredProcedures\CustOrdersOrders.sql" />
+    <Build Include="StoredProcedures\CustOrdersDetail.sql" />
+    <Build Include="StoredProcedures\CustOrderHist.sql" />
+  </ItemGroup>
+</Project>

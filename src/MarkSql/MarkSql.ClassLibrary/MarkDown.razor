@@ -1,11 +1,26 @@
 ﻿<h3>MarkDown</h3>
-@inherits EditorBase
 
-<textarea class="form-control" 
- @bind-value="Body" @bind-value:event="oninput">
-</textarea>
+<textarea @oninput="HandleOnChange">@md</textarea>
 
 @code {
-    public string Body { get; set; } = string.Empty;
-    public string Preview => Body;//  Markdown.ToHtml(Body);
+
+    private string? md;
+
+    [Parameter] public string? ChildData { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ChildDataChanged { get; set; }
+
+    private async Task HandleOnChange(ChangeEventArgs args)
+    {
+        md = (args == null || args.Value == null) ? "" : args.Value.ToString();
+        await ChildDataChanged.InvokeAsync(md);
+    }
+
+    protected override void OnParametersSet()
+    {
+        md = ChildData;
+
+        base.OnParametersSet();
+    }
 }

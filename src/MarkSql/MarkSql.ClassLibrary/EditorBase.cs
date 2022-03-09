@@ -9,6 +9,6 @@ namespace MarkSql.ClassLibrary
 {
     public class EditorBase : ComponentBase
     {
-        public string Body { get; set; }
+
     }
 }
