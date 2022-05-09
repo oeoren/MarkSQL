@@ -1,7 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace MarkSql.Server.Context
+namespace MarkSql.ServerLib
 {
     public class DapperContext
     {

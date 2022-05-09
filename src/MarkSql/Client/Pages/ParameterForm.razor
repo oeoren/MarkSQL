@@ -1,0 +1,56 @@
+﻿@page "/ParameterForm/{ProcName}"
+@using MarkSql.Client.Services
+@inject ILocalApi localApi
+@using MarkSql.ClassLibrary.Domain
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.WebUtilities
+
+<h3>ParameterForm</h3>
+<EditForm Model = "@Report" OnInvalidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="procname" @bind-Value="Report.Procname" />
+
+    <ul>
+
+    @foreach (var parameter in Report.Parameters)
+    {
+            <li>@parameter.Name</li>
+    }
+    </ul>
+
+        <button type="submit">Submit</button>
+
+</EditForm>
+
+@code {
+    [ParameterAttribute]
+    public string? ProcName { get; set; }
+    public MasReport? Report { get; set; }
+    public string MarkDown { get; set; } = "Nothing";
+    public string Html { get; set; } = "Nothing";
+    public List<KeyValuePair<string, string>> items = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var parameters = QueryHelpers.ParseQuery(uri.Query);
+        items = parameters.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
+
+        Report = new MasReport { Procname = ProcName, Parameters = new List<MasParameter>() };
+        if (items != null)
+        {
+            foreach (var p in items)
+            {
+                Report.Parameters.Add(new MasParameter { Name = p.Key, Value = p.Value, MasType = "string" });
+            }
+        }
+
+    }
+
+
+    private void HandleValidSubmit()
+    {
+    }
+}

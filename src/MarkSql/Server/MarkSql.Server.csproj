@@ -13,8 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MarkSql.ServerLib\MarkSql.ServerLib.csproj" />
     <ProjectReference Include="..\Client\MarkSql.Client.csproj" />
+    <ProjectReference Include="..\MarkSql.ClassLibrary\MarkSql.ClientLib.csproj" />
     <ProjectReference Include="..\Shared\MarkSql.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Context\" />
   </ItemGroup>
 
 

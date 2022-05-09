@@ -1,23 +1,13 @@
 ﻿@page "/"
+@using MarkSql.Client.Services
+@inject ILocalApi localApi
 
-<PageTitle>Index</PageTitle>
-
-<input type="text" @bind="md" @bind:event="oninput" />
-
-<MarkDown @bind-ChildData="md" />
-
-<br/>
-
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
 
 
 <EditForm Model="MyModel">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <GenericForm @bind-Model="MyModel" EditorClass="form-control" EnableFieldValidation="false">
+@*    <GenericForm @bind-Model="MyModel" EditorClass="form-control" EnableFieldValidation="false">
         <FieldTemplate Context="field">
             <div class="form-group">
                 <label for="@field.EditorId">@field.DisplayName</label>
@@ -26,6 +16,7 @@ Welcome to your new app.
             </div>
         </FieldTemplate>
     </GenericForm>
+*@
 </EditForm>
 <div>
     <label>
@@ -38,13 +29,11 @@ Welcome to your new app.
 @MyModel
 </div>
 @code {
-
-
-    private string md = "empty";
-    private void ExecProc()
+    public void ExecProc()
     {
-        md = $"Last changed at {DateTime.Now}";
+        
     }
+
     public Model MyModel { get; set; } = new Model();
 
     public record Model

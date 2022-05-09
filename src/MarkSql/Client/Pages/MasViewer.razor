@@ -1,0 +1,54 @@
+﻿@page "/MasViewer/{ProcName}"
+@using MarkSql.ClassLibrary.Domain
+@using MarkSql.ClassLibrary.Services
+@using MarkSql.Client.Services
+@using Microsoft.AspNetCore.WebUtilities
+@inject ILocalApi localApi
+@inject NavigationManager NavManager
+@inject IMarkDownService MarkDownService 
+
+
+
+<h3>MasViewer</h3>
+@((MarkupString)Html)
+<br />
+
+@MarkDown 
+
+@code {
+    [ParameterAttribute]
+    public string? ProcName { get; set; }
+    public MasReport? Report { get; set; }
+    public string MarkDown { get; set; } = "Nothing";
+    public string Html { get; set; } = "Nothing";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var parameters = QueryHelpers.ParseQuery(uri.Query);
+        var items = parameters.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
+
+        Report = new MasReport { Procname = ProcName, Parameters = new List<MasParameter>() };
+        if (items != null)
+        {
+            foreach (var p in items)
+            {
+                Report.Parameters.Add(new MasParameter { Name = p.Key, Value = p.Value, MasType = "string" });
+            }
+        }
+        try
+        {
+            MarkDown = await localApi.ExceMqProc(Report);
+        }
+        catch (Exception e)
+        {
+            MarkDown = e.ToString();
+        }
+        var md = MarkDownService.Parse(MarkDown);
+        Html = MarkDownService.RenderAsHtml(md);
+
+        StateHasChanged();
+
+    }
+
+}

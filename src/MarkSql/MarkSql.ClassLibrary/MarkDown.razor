@@ -1,10 +1,21 @@
-﻿<h3>MarkDown</h3>
+﻿@using Markdig
 
-<textarea @oninput="HandleOnChange">@md</textarea>
+<h3>MarkDown</h3>
+<textarea @oninput="HandleOnChange" style="width:400px " >@md</textarea>
+
+
+<h3>Preview</h3>
+@((MarkupString)@html)
+
+<h3>HTML</h3>
+<pre>
+@html
+</pre>
 
 @code {
 
-    private string? md;
+    private string md="";
+    private string html="";
 
     [Parameter] public string? ChildData { get; set; }
 
@@ -21,6 +32,9 @@
     {
         md = ChildData;
 
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+        html = Markdown.ToHtml(md,pipeline);
         base.OnParametersSet();
+
     }
-}
+}÷

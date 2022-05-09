@@ -6,12 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="EditorBase.cs" />
+    <Compile Remove="ExampleJsInterop.cs" />
+    <Compile Remove="GenericFormField.cs" />
+    <Compile Remove="InputDateTime.cs" />
+    <Compile Remove="InputEnumSelect.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="GenericForm.razor" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.28.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
   </ItemGroup>
 
