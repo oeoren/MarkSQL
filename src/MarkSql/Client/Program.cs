@@ -1,6 +1,7 @@
-using MarkSql.ClassLibrary.Services;
+using MarkSql.ClientLib;
 using MarkSql.Client;
 using MarkSql.Client.Services;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -13,7 +14,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 //var localApiService = new LocalApi(localApiClient);
 builder.Services.AddSingleton<ILocalApi,LocalApi>();
 builder.Services.AddSingleton<HttpClient>(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
-
 builder.Services.AddSingleton<IMarkDownService, MarkDownService>();
 var host =  builder.Build();
 

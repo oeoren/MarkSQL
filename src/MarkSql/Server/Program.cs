@@ -1,5 +1,6 @@
 using MarkSql.ServerLib;
 using Microsoft.AspNetCore.ResponseCompression;
+using MarkSql.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,17 @@ builder.Services.AddSingleton<DapperContext>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSingleton<IMarkModelBuilder, MarkModelBuilder>();
+    
+    //(
+    //op =>
+    //{
+    //    var mb = op.GetService<IModelBuilder>();
+    //    var model = mb.ConstructModel();
+    //    return (ModelBuilder)mb;
+    //}
+    //);
 
 
 var app = builder.Build();
@@ -36,5 +48,6 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
 
 app.Run();

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkSql.ClassLibrary.Services
+namespace MarkSql.ClientLib
 {
     /// <summary>
     /// Provide dependency injection

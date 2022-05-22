@@ -1,3 +1,4 @@
+using MarkSql.ServerLib;
 using MarkSql.Shared;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace MarkSql.Server.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+            public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

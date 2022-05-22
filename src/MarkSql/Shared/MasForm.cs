@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkSql.ClassLibrary.Domain
+namespace MarkSql.Shared
 {
     /// <summary>
     /// Parameters declared on SQL Server
     /// </summary>
-    public class MasParameter
+    public class MasField
     {
         public string Name { get; set; }
         public string Value { get; set; }
@@ -18,10 +18,10 @@ namespace MarkSql.ClassLibrary.Domain
         public string FormValue { get; set; }
 
     }
-    public  class MasReport
+    public  class MasForm
     {
         public string Procname { get; set; } = string.Empty;
-        public List<MasParameter> Parameters { get; set; } = new List<MasParameter>();
+        public List<MasField> Fields { get; set; } = new List<MasField>();
 
 
     }

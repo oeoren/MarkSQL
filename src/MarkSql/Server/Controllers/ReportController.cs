@@ -15,16 +15,20 @@ namespace MarkSql.Server.Controllers
     public class ReportController : ControllerBase
     {
         private readonly DapperContext _context;
+        private readonly IMarkModelBuilder _modelBuilder;
 
-        public ReportController(DapperContext context)
+        public ReportController(DapperContext context, IMarkModelBuilder modelBuilder)
         {
             _context = context;
+            _modelBuilder = modelBuilder;
         }
 
         [HttpGet("{procedureName}")]
         public async Task<string> GetAsync(string procedureName)
         {
-            
+
+            var model = await _modelBuilder.GetModel();
+
             var queryParams = QueryHelpers.ParseQuery(Request.QueryString.Value);
 
             var items = queryParams.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();

@@ -9,24 +9,34 @@ using MarkSql.Shared;
 
 namespace MarkSql.ServerLib
 {
-    public interface IModelBuilder
+    public interface IMarkModelBuilder : IServiceProvider
     {
-
-    }
-    public class ModelBuilder : IModelBuilder
+        Task<MarkModel> ConstructMarkModel();
+        Task<MarkModel> GetModel();
+    
+    };
+    public class MarkModelBuilder : IMarkModelBuilder 
     {
         private readonly ILogger _logger;
         private readonly DapperContext _context;
 
-        ModelBuilder(ILogger logger, DapperContext dapperContext)
+        MarkModel? _model;
+
+        public MarkModelBuilder(ILogger<MarkModelBuilder> logger, DapperContext dapperContext)
         {
             _logger = logger; 
             _context = dapperContext;
+            _model = null;
         }
 
-        public async Task<Model> ConstructModel(string conString)
+        public async Task<MarkModel?> GetModel() {
+            if (_model == null)
+                _model = await ConstructMarkModel();
+            return _model; 
+        }
+        public async Task<MarkModel> ConstructMarkModel()
         {
-            Model model = new Model();
+            _model = new MarkModel();
             using (var connection = _context.CreateConnection())
             {
                 string query = @"SELECT  
@@ -48,7 +58,7 @@ namespace MarkSql.ServerLib
 					INFORMATION_SCHEMA.PARAMETERS ip 
 					ON ir.ROUTINE_NAME = ip.SPECIFIC_NAME 
 				WHERE 
-					ir.ROUTINE_NAME LIKE 'API%' 
+					ir.ROUTINE_NAME LIKE 'mq_%' 
 					AND ir.ROUTINE_TYPE = 'PROCEDURE' 
 					AND COALESCE(OBJECTPROPERTY 
 					( 
@@ -65,22 +75,24 @@ namespace MarkSql.ServerLib
 
                     foreach (var row in rows)
                     {
-                        string procName = row["ProcedureName"].ToString();
-                        ControllerInfo controller = GetControllerInfo(model, procName);
-                        if (controller != null)
+                        string procName = row.ProcedureName;
+                        var proc = GetProcInfo(_model, procName);
+                        if (proc != null)
                         {
-                            ProcInfo proc = GetProcInfo(controller, procName);
-                            string parameterName = row["ParameterName"].ToString();
+                            string parameterName = row.ParameterName;
                             if (parameterName != "<no params>")
-                                proc.parameters.Add(new ParameterInfo
+                            {
+                                var param = new ParameterInfo
                                 {
                                     name = parameterName,
-                                    precision = (DBNull.Value == row["Precision"]) ? 0 : int.Parse(row["Precision"].ToString()),
-                                    scale = (DBNull.Value == row["Scale"]) ? 0 : int.Parse(row["Scale"].ToString()),
-                                    maxLen = (DBNull.Value == row["Maxlen"]) ? 0 : int.Parse(row["MaxLen"].ToString()),
-                                    sqlType = row["SqlType"].ToString(),
-                                    isOutput = (row["ParameterMode"].ToString() != "IN")
-                                });
+                                    precision = (row.Precision == null) ? null : int.Parse(row.Precision),
+                                    scale = (row.Scale == null) ? null : int.Parse(row.Scale),
+                                    maxLen = (row.Maxlen == null) ? null : int.Parse(row.MaxLen),
+                                    sqlType = row.SqlType,
+                                    isOutput = (row.ParameterMode != "IN")
+                                };
+                                proc.parameters.Add(param);
+                            }
                         }
                     }
                 }
@@ -92,7 +104,7 @@ namespace MarkSql.ServerLib
                 {
                 }
             }
-            return model;
+            return _model;
         }
 /*
         private static void GetXmlComments(SqlConnection con, ProcInfo proc)
@@ -143,6 +155,16 @@ namespace MarkSql.ServerLib
             return newProc;
         }
 
+        private static ProcInfo GetProcInfo(MarkModel model, string procName)
+        {
+            foreach (var proc in model.procs)
+                if (proc.name == procName)
+                    return proc;
+            ProcInfo newController = new ProcInfo { name = procName };
+            model.procs.Add(newController);
+            return newController;
+        }
+
         private static ControllerInfo GetControllerInfo(Model model, string procName)
         {
             procName = SkipAPI(procName);
@@ -166,6 +188,11 @@ namespace MarkSql.ServerLib
             ControllerInfo newController = new ControllerInfo { name = procName };
             model.controllers.Add(newController);
             return newController;
+        }
+
+        public object? GetService(Type serviceType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

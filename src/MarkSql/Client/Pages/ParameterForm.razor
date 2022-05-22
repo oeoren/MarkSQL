@@ -1,7 +1,7 @@
 ﻿@page "/ParameterForm/{ProcName}"
 @using MarkSql.Client.Services
+@using MarkSql.Shared
 @inject ILocalApi localApi
-@using MarkSql.ClassLibrary.Domain
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.WebUtilities
 
@@ -14,7 +14,7 @@
 
     <ul>
 
-    @foreach (var parameter in Report.Parameters)
+    @foreach (var parameter in Report.Fields)
     {
             <li>@parameter.Name</li>
     }
@@ -27,7 +27,7 @@
 @code {
     [ParameterAttribute]
     public string? ProcName { get; set; }
-    public MasReport? Report { get; set; }
+    public MasForm? Report { get; set; }
     public string MarkDown { get; set; } = "Nothing";
     public string Html { get; set; } = "Nothing";
     public List<KeyValuePair<string, string>> items = null;
@@ -38,12 +38,12 @@
         var parameters = QueryHelpers.ParseQuery(uri.Query);
         items = parameters.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
 
-        Report = new MasReport { Procname = ProcName, Parameters = new List<MasParameter>() };
+        Report = new MasForm { Procname = ProcName, Fields = new List<MasField>() };
         if (items != null)
         {
             foreach (var p in items)
             {
-                Report.Parameters.Add(new MasParameter { Name = p.Key, Value = p.Value, MasType = "string" });
+                Report.Fields.Add(new MasField { Name = p.Key, Value = p.Value, MasType = "string" });
             }
         }
 

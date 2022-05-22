@@ -23,9 +23,23 @@ namespace MarkSql.Shared
             this.controllers = new List<ControllerInfo>();
         }
         public List<ControllerInfo> controllers { get; set; }
+
         public string dbConnection { get; set; }
 
     }
+
+    public class MarkModel
+    {
+        public MarkModel()
+        {
+            this.procs = new List<ProcInfo>();
+        }
+        public List<ProcInfo> procs { get; set; }
+
+        public string dbConnection { get; set; }
+
+    }
+
 
 
     public class TableModel
@@ -92,9 +106,9 @@ namespace MarkSql.Shared
         public string name { get; set; }
         public string sqlType { get; set; }
         public string csType { get; set; }
-        public int precision { get; set; }
-        public int scale { get; set; }
-        public int maxLen { get; set; }
+        public int? precision { get; set; }
+        public int? scale { get; set; }
+        public int? maxLen { get; set; }
         public bool isOutput { get; set; }
     }
 
