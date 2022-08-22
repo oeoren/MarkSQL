@@ -16,6 +16,16 @@ namespace MarkSql.Shared
         httpDelete = 3
     }
 
+    public class ProcReturn
+    {
+        public string? MarkDown;
+        public string? Msg;           // Plain text
+        public string? Json;          // 
+        public int? HttpReturnCode;   // 200, 201, 400
+        public string? UserMessage;   // "Some user friendly message"
+        public string? RedirectUrl;   // http://
+        public string? ReturnAction;  // View, Dialog, Close, Redirect        
+    }
     public class Model
     {
         public Model()
@@ -24,7 +34,7 @@ namespace MarkSql.Shared
         }
         public List<ControllerInfo> controllers { get; set; }
 
-        public string dbConnection { get; set; }
+        public string? dbConnection { get; set; }
 
     }
 

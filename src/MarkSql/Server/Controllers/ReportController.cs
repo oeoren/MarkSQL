@@ -1,6 +1,7 @@
 ﻿using Dapper;
 
 using MarkSql.ServerLib;
+using MarkSql.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Data;
@@ -30,30 +31,44 @@ namespace MarkSql.Server.Controllers
             var model = await _modelBuilder.GetModel();
 
             var queryParams = QueryHelpers.ParseQuery(Request.QueryString.Value);
-
             var items = queryParams.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
             var parameters = new DynamicParameters();
 
             //   parameters.Add("lookupCategory", "2", DbType.String, ParameterDirection.Input);
 
-            foreach (var parameter in queryParams)
-            {
-                parameters.Add(parameter.Key, parameter.Value.ToString(), DbType.String, ParameterDirection.Input);
-            }
+            var proc = model.procs.FirstOrDefault(p => p.name == procedureName);
 
-                using (var connection = _context.CreateConnection())
-                {
+            foreach (var pi in proc.parameters)
+                foreach (var parameter in queryParams)
+                    if (parameter.Key == pi.name)
+                        switch (pi.sqlType)
+                        {
+                            case "datetime":
+                                var val = DateTime.Parse(parameter.Value.ToString());
+                                parameters.Add(parameter.Key, val, DbType.DateTime);
+                                break;
+
+                            default:
+                                parameters.Add(parameter.Key, parameter.Value.ToString(), DbType.String, ParameterDirection.Input);
+                                break;
+
+
+                        };
+
+            using (var connection = _context.CreateConnection())
+            {
                 string jStr = ""; ;
-                try { 
-                var ret = await connection.QueryFirstOrDefaultAsync<String>
-                    (procedureName, parameters, commandType: CommandType.StoredProcedure)
-                    .ConfigureAwait(false); 
-                    jStr = JsonSerializer.Serialize(ret);
+                try
+                {
+                    var ret = await connection.QueryFirstOrDefaultAsync<ProcReturn>
+                        (procedureName, parameters, commandType: CommandType.StoredProcedure)
+                        .ConfigureAwait(false);
+                    jStr = JsonSerializer.Serialize(ret.MarkDown);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error executing " + procedureName + ":" + ex.ToString());
-                    throw ex;
+                    throw;
                 }
                 return jStr;
             }

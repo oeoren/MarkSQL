@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer;
 
 namespace MarkSql.Shared
 {
@@ -18,11 +19,25 @@ namespace MarkSql.Shared
         public string FormValue { get; set; }
 
     }
-    public  class MasForm
+    public class MasForm
     {
-        public string Procname { get; set; } = string.Empty;
-        public List<MasField> Fields { get; set; } = new List<MasField>();
+        private string? name;
+        public string Name {
+            get
+            {
+                if (string.IsNullOrEmpty(this.name))
+                {
+                    var name = Procname.Substring(Procname.IndexOf('_') + 1);
+                    
+                    return name.Humanize();
+                }
+                return Name;
+            }
+            set { name = value; } 
+        }
 
+        public string Procname { get; set; } = String.Empty;
+        public List<MasField> Fields { get; set; } = new List<MasField>();
 
     }
 }

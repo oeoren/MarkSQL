@@ -12,8 +12,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 //var localApiClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
 //var localApiService = new LocalApi(localApiClient);
-builder.Services.AddSingleton<ILocalApi,LocalApi>();
 builder.Services.AddSingleton<HttpClient>(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
+builder.Services.AddSingleton<IFormMaker, FormMaker>();
+builder.Services.AddSingleton<ILocalApi, LocalApi>();
+builder.Services.AddSingleton<IMenuMaker, MenuMaker>();
 builder.Services.AddSingleton<IMarkDownService, MarkDownService>();
 var host =  builder.Build();
 

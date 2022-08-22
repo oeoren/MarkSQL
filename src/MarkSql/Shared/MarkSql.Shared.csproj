@@ -9,4 +9,16 @@
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Util\" />
+    <None Remove="Microsoft.AspNetCore.WebUtilities" />
+    <None Remove="Humanizer.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Util\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+  </ItemGroup>
 </Project>

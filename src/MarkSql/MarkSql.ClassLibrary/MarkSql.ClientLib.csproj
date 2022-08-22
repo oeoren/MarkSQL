@@ -24,12 +24,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.28.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+    <PackageReference Include="Markdig" Version="0.30.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Domain\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Humanizer.Core" />
+  </ItemGroup>
 </Project>

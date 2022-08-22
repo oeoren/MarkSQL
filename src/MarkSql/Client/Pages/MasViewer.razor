@@ -8,9 +8,8 @@
 
 <h3>MasViewer</h3>
 @((MarkupString)Html)
-<br />
+<br />  
 
-@MarkDown 
 
 @code {
 
@@ -26,17 +25,18 @@
     protected override async Task OnInitializedAsync()
     {
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
-        var parameters = QueryHelpers.ParseQuery(uri.Query);
-        var items = parameters.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
 
-        Report = new MasForm { Procname = ProcName, Fields = new List<MasField>() };
-        if (items != null)
-        {
-            foreach (var p in items)
-            {
-                Report.Fields.Add(new MasField { Name = p.Key, Value = p.Value, MasType = "string" });
-            }
-        }
+        if (ProcName == null)
+            return;
+
+        Report =  await localApi.GetForm(ProcName);
+        if (Report == null)
+            return;
+
+        Report = FormUtil.GetFormAndValues(Report, uri);
+        if (Report == null)
+            return;
+
         try
         {
             MarkDown = await localApi.ExceMqProc(Report);

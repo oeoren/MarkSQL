@@ -12,14 +12,15 @@ namespace MarkSql.Client.Services
         public Task<string?> ExceMqProc(MasForm masReport);
 
         public Task<MasForm?> GetForm(string procName);
+        public Task<MarkModel?> GetModel();
     }
 
     public class LocalApi : ILocalApi
      {
         HttpClient _httpClient;
         MarkModel? _masModel;
-        FormMaker _formMaker;
-        public LocalApi(HttpClient httpClient, FormMaker formMaker)
+        IFormMaker _formMaker;
+        public LocalApi(HttpClient httpClient, IFormMaker formMaker)
         {
             _httpClient = httpClient;
             _masModel = null;
@@ -46,15 +47,23 @@ namespace MarkSql.Client.Services
             return md;
         }
 
+
         public async Task<MasForm?> GetForm(string procName)
         {
+            var markModel = await GetModel();
+            if (markModel == null)
+                return null;
+            return _formMaker.BuildForm(markModel,procName);
+        }
+
+        public async Task<MarkModel?> GetModel()
+        {
             if (_masModel == null)
-            {
+            { 
                 string uri = "api/Model";
                 _masModel = await _httpClient.GetFromJsonAsync<MarkModel>(uri);
-                return null;
             }
-            return _formMaker.BuildForm(_masModel,procName);
+            return _masModel;
         }
     }
 }

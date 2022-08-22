@@ -85,8 +85,8 @@ namespace MarkSql.ServerLib
                                 var param = new ParameterInfo
                                 {
                                     name = parameterName,
-                                    precision = (row.Precision == null) ? null : int.Parse(row.Precision),
-                                    scale = (row.Scale == null) ? null : int.Parse(row.Scale),
+                                    //precision = (row.Precision == null) ? null : int.Parse(row.Precision),
+                                    //scale = (row.Scale == null) ? null : int.Parse(row.Scale),
                                     maxLen = (row.Maxlen == null) ? null : int.Parse(row.MaxLen),
                                     sqlType = row.SqlType,
                                     isOutput = (row.ParameterMode != "IN")

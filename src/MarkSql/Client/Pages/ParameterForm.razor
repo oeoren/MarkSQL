@@ -1,56 +1,89 @@
 ﻿@page "/ParameterForm/{ProcName}"
+@using Microsoft.AspNetCore.Components.Forms
 @using MarkSql.Client.Services
 @using MarkSql.Shared
 @inject ILocalApi localApi
 @inject NavigationManager NavManager
-@using Microsoft.AspNetCore.WebUtilities
 
-<h3>ParameterForm</h3>
-<EditForm Model = "@Report" OnInvalidSubmit="@HandleValidSubmit">
+
+
+<EditForm Model="@Report" OnInvalidSubmit="@HandleValidSubmit" OnValidSubmit=@HandleValidSubmit>
+
     <DataAnnotationsValidator />
+
     <ValidationSummary />
-
-    <InputText id="procname" @bind-Value="Report.Procname" />
-
-    <ul>
+    <h3>@Report.Name</h3>
+    <hr />
 
     @foreach (var parameter in Report.Fields)
     {
-            <li>@parameter.Name</li>
-    }
-    </ul>
+        <div class="form-group row">
 
-        <button type="submit">Submit</button>
+            @switch (parameter.MasType)
+            {
+                case "date":
+                    <label for="@parameter.Name" class="col-sm-2 col-form-label">
+                        @parameter.Name
+                    </label>
+                    <div class="col-sm-10">
+                        <InputText id="parameter.Name" class="form-control" @bind-Value="parameter.Value" type="date"></InputText>
+                    </div>
+                    break;
+                default:
+                    <label for="@parameter.Name" class="col-sm-2 col-form-label">
+                        @parameter.Name
+                    </label>
+                    <div class="col-sm-10">
+                        <InputText id="parameter.Name" class="form-control" @bind-Value="parameter.Value"></InputText>
+                    </div>
+                    break;
+            }
+        </div>
+    }
+
+    <button type="submit">Submit</button>
 
 </EditForm>
 
 @code {
+
     [ParameterAttribute]
     public string? ProcName { get; set; }
+
     public MasForm? Report { get; set; }
     public string MarkDown { get; set; } = "Nothing";
     public string Html { get; set; } = "Nothing";
     public List<KeyValuePair<string, string>> items = null;
-
     protected override async Task OnInitializedAsync()
     {
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
-        var parameters = QueryHelpers.ParseQuery(uri.Query);
-        items = parameters.SelectMany(x => x.Value, (col, value) => new KeyValuePair<string, string>(col.Key, value)).ToList();
+        if (ProcName == null)
+            return;
 
-        Report = new MasForm { Procname = ProcName, Fields = new List<MasField>() };
-        if (items != null)
-        {
-            foreach (var p in items)
-            {
-                Report.Fields.Add(new MasField { Name = p.Key, Value = p.Value, MasType = "string" });
-            }
-        }
+        Report = await localApi.GetForm(ProcName);
+        if (Report == null)
+            return;
+
+        Report = FormUtil.GetFormAndValues(Report, uri);
 
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await OnInitializedAsync();
+    }
 
     private void HandleValidSubmit()
     {
+        var myUri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        foreach (var par in Report.Fields)
+        {
+            myUri = UriExtensions.AddOrUpdateParameter(myUri, par.Name, par.Value);
+        }
+        var uriBuilder = new UriBuilder(myUri);
+        var myPath = uriBuilder.Path;
+        uriBuilder.Path = "/masviewer/" + Report.Procname;
+        var uriViewer = uriBuilder.ToString();
+        NavManager.NavigateTo(uriViewer);
     }
 }

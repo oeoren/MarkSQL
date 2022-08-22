@@ -10,7 +10,6 @@
   "profiles": {
     "MarkSql": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "applicationUrl": "https://localhost:7227;http://localhost:5227",
@@ -24,6 +23,13 @@
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "MarkSql.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }
